@@ -91,26 +91,25 @@ public class LevelGenerator : MonoBehaviour
     }
 
     //Code *cough* stollen *cough* inspired by code from  https://www.geeksforgeeks.org/shortest-distance-two-cells-matrix-grid/
+    //FIXED I was just being an idiot lol
     int Distance(int dst, int org)
     {
-        QItem source = new QItem(org % 10, org / 10, 0);
+        QItem source = new QItem(org % 10,( org - (org % 10)) / 10, 0);
+        QItem dst1 = new QItem(dst % 10,( dst - (dst % 10)) / 10, 0);
 
+        //Debug.Log(dst % 10 + "  " + (dst - (dst % 10)) / 10);
         // To keep track of visited QItems. Marking
         // blocked cells as visited.
         int N = 10;
         int M = 10;
         var visited = new bool[10, 10];
 
-        for (int i = 0; i < N; i++)
-        {
-            for (int j = 0; j < M; j++)
-            {
-                if (floorplan[i + j * 10] == 0)
-                    visited[i, j] = true;
-                else
-                    visited[i, j] = false;               
-            }
-        }
+        for (int i = 0; i < N; i++)        
+            for (int j = 0; j < M; j++)    
+                if (floorplan[i + j * 10] == 0 || floorplan[i + j * 10] == 2)
+                    visited[i, j] = false;
+                else 
+                    visited[i, j] = true; 
 
         // applying BFS on matrix cells starting from source
         Queue<QItem> q = new Queue<QItem>();
@@ -121,9 +120,8 @@ public class LevelGenerator : MonoBehaviour
             QItem p = q.Dequeue();
 
             // Destination found;
-            if (p.row + p.col * 10 == dst)
+            if (p.row == dst1.row && p.col == dst1.col)
             {
-
                 return p.dist ;
             }
             // moving up
@@ -170,17 +168,17 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < floorplan.Length; i++) floorplan[i] = 0;
         floorplan[45] = 2;
         //Generate end rooms
-        for (int i = 0; i < (depth == 1 ? 1 : 0) + 3; i++)
+        for (int i = 0; i < (depth == 1 ? 0 : 1) + 3; i++)
         {
             var room = Mathf.FloorToInt(Random.value * 100);
             if (room == 45 || floorplan[room] != 0 ) { i--; continue; }
-            floorplan[room] = 10;
+            floorplan[room] = 1;
             //if (i == 0) floorplan[room] = 3; 
             //else if (i == 1) floorplan[room] = 4; 
             //else floorplan[room] = 1;
             var dist = Distance(45, room);
             Debug.Log(dist);
-          //  if(dist == -1) { i--; continue; }
+            if(dist < 2) { i--; continue; }
             Endrooms.Add(new DistRoom());
             Endrooms[i].Room = room;
             Endrooms[i].Distance = dist;
