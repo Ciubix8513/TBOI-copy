@@ -84,6 +84,25 @@ public class LevelGenerator : MonoBehaviour
         GenerateLevel(Random.Range(1, 1000000), SeedSetting.Depth);
         BuildFloor();
     }
+    byte GetClosed(int i)  
+    {
+       
+        var p = new Vector3Int(i % 10, 0, (i - (i % 10)) / 10);
+        int o = 0;
+        if (p.z - 1 >= 0 && //N
+           floorplan[p.x + (p.z - 1)* 10] != 0)
+            o = o | 1;
+        if (p.z + 1 < 10 && //S
+            floorplan[p.x + (p.z +1)* 10] != 0)
+            o = o | 2;
+        if (p.x - 1 >= 0 && //W
+            floorplan[p.x - 1+ p.z * 10] != 0)
+            o = o | 8;       
+        if (p.x + 1 < 10 && //E
+            floorplan[p.x + 1 + p.z * 10] != 0)
+            o = o | 4;
+        return (byte)o;
+    }
     private void BuildFloor()
     {
         
@@ -97,8 +116,8 @@ public class LevelGenerator : MonoBehaviour
                 //Room
                 var r = Instantiate(NormalRooms[Random.Range(0, NormalRooms.Length)],rooms.transform);
                 r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
-
-
+                var rc = r.GetComponent<Room>();
+                rc.Opened = GetClosed(i);
             }
             else if (floorplan[i] == 2)
             {
@@ -106,6 +125,8 @@ public class LevelGenerator : MonoBehaviour
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
                 var r = Instantiate(StartingRooms[Random.Range(0, StartingRooms.Length)], rooms.transform);
                 r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
+                var rc = r.GetComponent<Room>();
+                rc.Opened = GetClosed(i);
             }
             else if (floorplan[i] == 3)
             {
@@ -113,6 +134,8 @@ public class LevelGenerator : MonoBehaviour
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
                 var r = Instantiate(BossRooms[Random.Range(0, BossRooms.Length)], rooms.transform);
                 r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
+                var rc = r.GetComponent<Room>();
+                rc.Opened = GetClosed(i);
             }
             else if (floorplan[i] == 4)
             {
@@ -120,6 +143,8 @@ public class LevelGenerator : MonoBehaviour
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
                 var r = Instantiate(ItemRooms[Random.Range(0, ItemRooms.Length)], rooms.transform);
                 r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
+                var rc = r.GetComponent<Room>();
+                rc.Opened = GetClosed(i);
             }
         }
         
