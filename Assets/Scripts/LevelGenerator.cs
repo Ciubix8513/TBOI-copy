@@ -36,6 +36,9 @@ class DistRoom : System.IComparable<int>, System.IComparable<DistRoom>
 
 public class LevelGenerator : MonoBehaviour
 {
+    [SerializeField]
+    GameObject map;
+
     [Header("Debug data")]
     [SerializeField]
     int[] floorplan;
@@ -47,8 +50,6 @@ public class LevelGenerator : MonoBehaviour
     GameObject ItemRoomO;
     [SerializeField]
     GameObject StartRoom;
-
-
     [Header("Generation settings")]
     [SerializeField]
     [Range(0,99)]
@@ -59,6 +60,17 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField]
     [Range(1, 10)]
     int maxDistance = 3;
+
+
+    [Header("Rooms")]
+    [SerializeField]
+    GameObject[] NormalRooms;
+    [SerializeField]
+    GameObject[] BossRooms;
+    [SerializeField]
+    GameObject[] ItemRooms;
+    [SerializeField]
+    GameObject[] StartingRooms;
 
 
     void Awake()
@@ -74,23 +86,23 @@ public class LevelGenerator : MonoBehaviour
         {
             if (floorplan[i] == 1)
             {
-                var o = Instantiate(room);
-                o.transform.position = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var o = Instantiate(room,map.transform);
+                o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
             }
             else if (floorplan[i] == 2)
             {
-                var o = Instantiate(StartRoom);
-                o.transform.position = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var o = Instantiate(StartRoom, map.transform);
+                o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
             }
             else if (floorplan[i] == 3)
             {
-                var o = Instantiate(BossRoom);
-                o.transform.position = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var o = Instantiate(BossRoom, map.transform);
+                o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
             }
             else if (floorplan[i] == 4)
             {
-                var o = Instantiate(ItemRoomO);
-                o.transform.position = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var o = Instantiate(ItemRoomO, map.transform);
+                o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
             }
         }
     }
@@ -130,7 +142,6 @@ public class LevelGenerator : MonoBehaviour
             iter++;
             goto start;
         }
-
         // moving down
         if (Y + 1 < 10 &&
             data[X , Y + 1] < data[X,Y])
@@ -141,8 +152,7 @@ public class LevelGenerator : MonoBehaviour
             goto start;
         }        
         return true;
-    }
-   
+    } 
 
     //Code *cough* stollen *cough* inspired by code from  https://www.geeksforgeeks.org/shortest-distance-two-cells-matrix-grid/
     //FIXED! I was just being an idiot lol
