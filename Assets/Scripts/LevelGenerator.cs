@@ -38,6 +38,8 @@ public class LevelGenerator : MonoBehaviour
 {
     [SerializeField]
     GameObject map;
+    [SerializeField]
+    GameObject rooms;
 
     [Header("Debug data")]
     [SerializeField]
@@ -64,6 +66,8 @@ public class LevelGenerator : MonoBehaviour
 
     [Header("Rooms")]
     [SerializeField]
+    int roomSize = 9;
+    [SerializeField]
     GameObject[] NormalRooms;
     [SerializeField]
     GameObject[] BossRooms;
@@ -82,29 +86,44 @@ public class LevelGenerator : MonoBehaviour
     }
     private void BuildFloor()
     {
+        
         for (int i = 0; i < floorplan.Length; i++)
         {
             if (floorplan[i] == 1)
             {
+                //Map object
                 var o = Instantiate(room,map.transform);
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                //Room
+                var r = Instantiate(NormalRooms[Random.Range(0, NormalRooms.Length)],rooms.transform);
+                r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
+
+
             }
             else if (floorplan[i] == 2)
             {
                 var o = Instantiate(StartRoom, map.transform);
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var r = Instantiate(StartingRooms[Random.Range(0, StartingRooms.Length)], rooms.transform);
+                r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
             }
             else if (floorplan[i] == 3)
             {
                 var o = Instantiate(BossRoom, map.transform);
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var r = Instantiate(BossRooms[Random.Range(0, BossRooms.Length)], rooms.transform);
+                r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
             }
             else if (floorplan[i] == 4)
             {
                 var o = Instantiate(ItemRoomO, map.transform);
                 o.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) / 5;
+                var r = Instantiate(ItemRooms[Random.Range(0, ItemRooms.Length)], rooms.transform);
+                r.transform.localPosition = new Vector3(i % 10, 0, (i - (i % 10)) / 10) * roomSize;
             }
         }
+        
+
     }
     bool GeneratePath(int[,] data)
     {
