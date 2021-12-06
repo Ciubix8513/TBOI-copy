@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
+
+[RequireComponent(typeof(Rigidbody))]
 public class Enemy : MonoBehaviour
 {
+    protected Rigidbody rb;
     [Header("Enemy data")]
     public int Health;
-    public int Speed;
+    public float Speed;
     public bool Flying;
     public bool Alive;
     public bool ContactDamage;
@@ -25,12 +29,18 @@ public class Enemy : MonoBehaviour
     UnityEvent OnDeath;
     [SerializeField]
     UnityEvent OnSpawn;
+    
 
     private void OnCollisionEnter(Collision collision)
     {
+       
         if(ContactDamage
             && collision.gameObject.CompareTag("Player"))
             collision.gameObject.GetComponent<Player>().TakeDamage();            
+    }
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -41,9 +51,5 @@ public class Enemy : MonoBehaviour
             OnDeath.Invoke();
             gameObject.SetActive(false);
         }
-
     }
-
-
-
 }

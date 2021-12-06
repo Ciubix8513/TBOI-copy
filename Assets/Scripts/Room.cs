@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class Room : MonoBehaviour
-{    
+{
     //Directions are the same as in minecraft lol
     //N = -Z S = +Z W = -X E = +X
     [Header("Room Data")]
@@ -32,8 +32,10 @@ public class Room : MonoBehaviour
     [Header("Room data")]
     public bool Cleared = false;
     public bool InProgress = false;
+    public bool Entered = false;
     public List<Enemy> enemies;
-
+    [HideInInspector]
+    public Transform player;
 
     public void OpenDoors()
     {
@@ -47,44 +49,50 @@ public class Room : MonoBehaviour
         passageW.SetActive((Opened & 4) != 0);
         passageE.SetActive((Opened & 8) != 0);
     }
-    public void CloseDoors() 
+    public void CloseDoors()
     {
         doorN.SetActive(true);
         doorS.SetActive(true);
         doorW.SetActive(true);
         doorE.SetActive(true);
     }
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             if (!Cleared)
             {
+                player = other.transform;
                 OnRoomEnter.Invoke();
                 InProgress = true;
+                Entered = true;
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    enemies[i].gameObject.SetActive( true);
+                }
             }
         }
-        
-          
-
     }
-    private void Start()
+    void Start()
     {
         OpenDoors();
         for (int i = 0; i < enemies.Count; i++)
         {
             enemies[i].room = this;
-            enemies[i].Active = false;
+            enemies[i].gameObject.SetActive(false);
         }
     }
-    private void Update()
+    void Update()
     {
-        if (InProgress)
-            for (int i = 0; i < enemies.Count; i++)
-                if (enemies[i].Alive)
-                    return;
-        Cleared = true;
-        InProgress = false;
-        OnRoomClear.Invoke();
+        if (Entered)
+        {
+            if (InProgress)
+                for (int i = 0; i < enemies.Count; i++)
+                    if (enemies[i].Alive)
+                        return;
+            Cleared = true;
+            InProgress = false;
+            OnRoomClear.Invoke();
+        }
     }
 }

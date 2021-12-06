@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public static class SeedSetting
 {
     public static int seed = 0;
@@ -36,6 +37,9 @@ class DistRoom : System.IComparable<int>, System.IComparable<DistRoom>
 
 public class LevelGenerator : MonoBehaviour
 {
+  
+    
+
     [SerializeField]
     GameObject map;
     [SerializeField]
@@ -83,6 +87,8 @@ public class LevelGenerator : MonoBehaviour
             GenerateLevel(SeedSetting.seed, SeedSetting.Depth);
         GenerateLevel(Random.Range(1, 1000000), SeedSetting.Depth);
         BuildFloor();
+       
+
     }
     byte GetClosed(int i)  
     {
