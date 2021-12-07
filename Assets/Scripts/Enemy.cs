@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
 {
     protected Rigidbody rb;
     [Header("Enemy data")]
-    public int Health;
+    public float Health;
     public float Speed;
     public bool Flying;
     public bool Alive;
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
     UnityEvent OnSpawn;
     
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
        
         if(ContactDamage
