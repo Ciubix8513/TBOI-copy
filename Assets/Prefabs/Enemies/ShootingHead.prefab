@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1672909284117855262}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Bullets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 7612342050837991646}
   - component: {fileID: 496021740244571606}
   - component: {fileID: 7390988010037572968}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Sphere
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 4845401296823498221}
   - component: {fileID: 4212282177784035484}
   - component: {fileID: 1855928726325468958}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: ShootingHead
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 10
   Speed: 0
-  Flying: 1
+  Flying: 0
   Alive: 1
   ContactDamage: 0
   active: 0

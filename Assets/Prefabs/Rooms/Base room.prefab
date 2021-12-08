@@ -199,7 +199,9 @@ MonoBehaviour:
         m_CallState: 2
   Cleared: 0
   InProgress: 0
+  Entered: 0
   enemies: []
+  player: {fileID: 0}
 --- !u!65 &850273768266770708
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -211,7 +213,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 8.25, y: 2, z: 8.25}
+  m_Size: {x: 8, y: 2, z: 8}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7524952192384934823
 GameObject:
