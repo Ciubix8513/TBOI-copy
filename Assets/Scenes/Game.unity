@@ -36,7 +36,7 @@ RenderSettings:
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
-  m_CustomReflection: {fileID: 7995536730365897021, guid: 0000000000000000d000000000000000, type: 0}
+  m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589245, b: 0.2978263, a: 1}
   m_UseRadianceAmbientProbe: 0
@@ -545,13 +545,13 @@ MonoBehaviour:
   maxDistance: 3
   roomSize: 10
   NormalRooms:
-  - {fileID: 2707637874442947881, guid: a37394d135de9704c95d18ddff3f6bdd, type: 3}
   - {fileID: 2707637874442947881, guid: 1c47721953bacfe49b7d555d012e8b8c, type: 3}
   - {fileID: 2707637874442947881, guid: b259030b3175e6a45906ac1176c8363c, type: 3}
+  - {fileID: 2707637874442947881, guid: 3db41dadf409de945b8568ab026ef0dc, type: 3}
   BossRooms:
-  - {fileID: 2707637874442947881, guid: a37394d135de9704c95d18ddff3f6bdd, type: 3}
+  - {fileID: 2707637874442947881, guid: 20c87183d278f90479d3e5d593b51a43, type: 3}
   ItemRooms:
-  - {fileID: 2707637874442947881, guid: a37394d135de9704c95d18ddff3f6bdd, type: 3}
+  - {fileID: 2707637874442947881, guid: b861f913a7a2c8a40a4aef484c56dc69, type: 3}
   StartingRooms:
   - {fileID: 2707637874442947881, guid: a37394d135de9704c95d18ddff3f6bdd, type: 3}
 --- !u!4 &810318958
@@ -675,6 +675,8 @@ GameObject:
   - component: {fileID: 1137492759}
   - component: {fileID: 1137492758}
   - component: {fileID: 1137492757}
+  - component: {fileID: 1137492762}
+  - component: {fileID: 1137492761}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -765,6 +767,40 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1137492761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137492756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1137492762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137492756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
 --- !u!1 &1144197677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,9 +1724,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1705352242}
     - target: {fileID: 3246078295044502253, guid: 5dba9c47da1a8e0449efac46f861a6e4, type: 3}
+      propertyPath: tears
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3246078295044502253, guid: 5dba9c47da1a8e0449efac46f861a6e4, type: 3}
       propertyPath: bullet
       value: 
       objectReference: {fileID: 3385325599804403125, guid: ee8d2d8354d8ccb4c94bfca7ab1f50fa, type: 3}
+    - target: {fileID: 3246078295044502253, guid: 5dba9c47da1a8e0449efac46f861a6e4, type: 3}
+      propertyPath: health
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3246078295044502253, guid: 5dba9c47da1a8e0449efac46f861a6e4, type: 3}
       propertyPath: bParrent
       value: 

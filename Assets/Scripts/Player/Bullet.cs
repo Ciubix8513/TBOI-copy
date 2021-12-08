@@ -5,21 +5,35 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
 {
-
+    [SerializeField]
+    bool playerBullet = true;
     public float dmg;
     public Rigidbody rb;
     public Transform c;
     private void OnCollisionEnter(Collision collision)
     {
-        if(!collision.gameObject.CompareTag("Enemy"))
+        if (playerBullet)
         {
+            if (!collision.gameObject.CompareTag("Enemy"))
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            var e = collision.gameObject.GetComponent<Enemy>();
+            e.Health -= dmg;
             gameObject.SetActive(false);
-            return;
         }
-        var e = collision.gameObject.GetComponent<Enemy>();
-        e.Health -= dmg;
-        gameObject.SetActive(false);
-
+        else 
+        {
+            if (!collision.gameObject.CompareTag("Player"))
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            var e = collision.gameObject.GetComponent<Player>();
+            e.TakeDamage((int)dmg);
+            gameObject.SetActive(false);
+        }
 
 
     }

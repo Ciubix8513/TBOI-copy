@@ -1,10 +1,47 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine;
 
+
+[Serializable]
+class PlayerData
+{
+    public int Score = 0;
+    [SerializeField]
+    int health = 6;
+    [HideInInspector]
+    public int Health { get { return health; } set { health = value; } }
+    [Range(0.01f, 1000.0f)]
+    float dmg = 3.5f;
+    public float Damage { get { return dmg; } set { dmg = Mathf.Clamp(value, 0.01f, 1000.0f); } }
+    [SerializeField]
+    [Range(0.01f, 2.0f)]
+    float speed = 1.0f;
+    public float Speed { get { return speed; } set { speed = Mathf.Clamp(value, 0.01f, 2.0f); } }
+    [SerializeField]
+    [Range(0.01f, 10.0f)]
+    float tears = 1.0f;
+    public float TearDelay { get { return tears; } set { tears = Mathf.Clamp(value, 0.01f, 10.0f); } }
+    [SerializeField]
+    [Range(0.1f, 4.0f)]
+    float sSpeed = 1.0f;
+    public float ShotSpeed { get { return sSpeed; } set { sSpeed = Mathf.Clamp(value, 0.1f, 4.0f); } }
+    [SerializeField]
+    [Range(0.1f, 10.0f)]
+    float r = 5.0f;
+    public float Range { get { return r; } set { r = Mathf.Clamp(value, 0.1f, 10.0f); } }
+
+}
+static class Data 
+{
+    public static bool HasData = false;
+    public static PlayerData d;
+}
 [RequireComponent(typeof(Rigidbody))]
+
 public class Player : MonoBehaviour
 {
     
@@ -30,35 +67,9 @@ public class Player : MonoBehaviour
     List<Bullet> Bullets;
 
     [Header("Stats")]
-    public int Score = 0;
     [SerializeField]
-    int health = 6;
-    [HideInInspector]
-    public int Health { get { return health; }  set { if (value <= 0) Death();  health = value; t.text = "Health: " + value; } }
-
-    
-
-    [SerializeField]
-    [Range(0.01f, 1000.0f)]
-    float dmg = 3.5f;
-    public float Damage { get { return dmg; } set { dmg = Mathf.Clamp(value, 0.01f, 1000.0f); } }
-    [SerializeField]
-    [Range(0.01f, 2.0f)]
-    float speed = 1.0f;
-    public float Speed { get { return speed; } set { speed = Mathf.Clamp(value, 0.01f, 2.0f); } }
-    [SerializeField]
-    [Range(0.01f, 10.0f)]
-    float tears = 1.0f;
-    public float TearDelay { get { return tears; } set { tears = Mathf.Clamp(value, 0.01f, 10.0f); } }
-    [SerializeField]
-    [Range(0.1f, 4.0f)]
-    float sSpeed = 1.0f;
-    public float ShotSpeed { get { return sSpeed; } set { sSpeed = Mathf.Clamp(value, 0.1f, 4.0f); } }
-    [SerializeField]
-    [Range(0.1f, 10.0f)]
-    float r = 5.0f;
-        public float Range { get { return r; } set { r = Mathf.Clamp(value, 0.1f, 10.0f); } }
-
+    PlayerData data;
+ 
 
     [SerializeField]
     [Range(0,2.0f)]
@@ -77,8 +88,13 @@ public class Player : MonoBehaviour
             if (!value)
                 StopCoroutine(Shoot());
             else
-                
-                StartCoroutine(Shoot());
+                try
+                {
+                    StartCoroutine(Shoot());
+                }catch(System.Exception e)
+                {
+                    Debug.Log(e.Message);
+                }
         } 
     }
     Vector3 ShootingDir = Vector3.zero;
@@ -92,10 +108,15 @@ public class Player : MonoBehaviour
     public KeyCode RightShoot = KeyCode.RightArrow; //4
     private void Death()
     {
+        Data.HasData = false;
         t.gameObject.SetActive(false);
         GOt.gameObject.SetActive(true);
-        GOtS.text += Score;
+        GOtS.text += data.Score;
+        if (HighScoreManager.GetHighScore() < data.Score)
+            HighScoreManager.SetHighscore(data.Score);
+        SeedSetting.seed = 0;
         gameObject.SetActive(false);
+
         
     }
     Bullet GetBullet()
@@ -117,20 +138,20 @@ public class Player : MonoBehaviour
     }
     IEnumerator Shoot()  //I sure hope this works, I hav NO idea if it will tho
     {
-        while(!stoppedShooting)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        while(!stoppedShooting) yield return new WaitForEndOfFrame();        
         while (Shooting) 
         {
         stoppedShooting = false;
             shoot();
-            yield return new WaitForSeconds(TearDelay);
+            yield return new WaitForSeconds(data.TearDelay);
             stoppedShooting = true;
         }
     }
     private void Start()
     {
+        if (Data.HasData)
+            data = Data.d;
+        t.text = "Health: " + data.Health;
         rb = GetComponent<Rigidbody>();
         Bullets = new List<Bullet>();
         for (int i = 0; i < bulletInstCount; i++) 
@@ -145,11 +166,24 @@ public class Player : MonoBehaviour
         if (!InVulnerable)
         {
             InVulnerable = true;
-            Health -= dmg;
-            
+            data.Health -= dmg;
+            t.text = "Health: " + data.Health;
+            if (data.Health <= 0) Death();
             OnDamage.Invoke();
-            StartCoroutine(Iframes());
+          if(gameObject.activeInHierarchy)
+                StartCoroutine(Iframes());
+            
+
         }
+    }
+   public void NextLevel() 
+    {
+        Data.HasData = true;
+        Data.d = data;
+        data.Score++;
+        SeedSetting.Depth++;
+        SeedSetting.seed++;
+        SceneManager.LoadGame(SeedSetting.Depth);
     }
 
     void shoot()
@@ -157,11 +191,13 @@ public class Player : MonoBehaviour
         OnShoot.Invoke();
         var b = GetBullet();
         b.gameObject.SetActive(true);
-        b.dmg = Damage;
+        b.dmg = data.Damage;
         b.transform.position = transform.position;
-        b.c.localScale *= Damage / 3.5f;
-        b.rb.velocity = ShootingDir * ShotSpeed * tearCNST; 
-        b.StartCoroutine(b.Life(Range / ShotSpeed));
+        b.c.localScale *= data.Damage / 3.5f;
+        b.rb.velocity = ShootingDir * data.ShotSpeed * tearCNST;
+          b.StartCoroutine(b.Life(data.Range / data.ShotSpeed));
+        
+      
     }
 
     void Update()
@@ -178,7 +214,7 @@ public class Player : MonoBehaviour
     {
         var h = Input.GetAxis("Horizontal");
         var v = Input.GetAxis("Vertical");
-        Vector3 force = new Vector3(h, 0, v) * speed * speedCnst;
+        Vector3 force = new Vector3(h, 0, v) * data.Speed * speedCnst;
         //rb.AddForce(force);
         rb.velocity = force;
     }

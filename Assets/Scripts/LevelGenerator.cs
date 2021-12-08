@@ -304,7 +304,7 @@ public class LevelGenerator : MonoBehaviour
             if (dist < minDistance || dist > depth + maxDistance) { i--; floorplan[room] = 0; continue; } //Preventing inaccesable rooms and making the less clustered
             else
             {
-                Debug.Log(dist);
+               
                 Endrooms.Add(dist1);
                 Endrooms[i].Room = room;
                 Endrooms[i].Distance = dist;
